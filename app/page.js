@@ -49,7 +49,7 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (currentTime == 0) {
+    if (currentTime == 0 && isRunning) {
       toast.success("🚀 Session Completed!");
     }
   })
