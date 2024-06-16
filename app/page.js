@@ -1,13 +1,14 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import TimerClock from './Components/TimerClock';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Page = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [reset, setReset] = useState(false);
-  const [initialSeconds, setInitialSeconds] = useState(5); // You can change this to any initial value you want
+  const [initialSeconds, setInitialSeconds] = useState(1000); // You can change this to any initial value you want
   const [currentTime, setCurrentTime] = useState(initialSeconds);
 
   const handleToggle = () => {
@@ -61,8 +62,10 @@ const Page = () => {
       <ToastContainer theme='dark' stacked />
       <h1 className='text-purple-700 text-4xl font-bold'>Pomodoro</h1>
 
+
       {/* Timer */}
       <div className='flex items-center justify-center'>
+
         <h3 className={timerColor}>
           <TimerClock initialSeconds={initialSeconds} isRunning={isRunning} reset={reset} onTimeUpdate={handleTimeUpdate} />
         </h3>
