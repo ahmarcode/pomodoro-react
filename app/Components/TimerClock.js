@@ -38,12 +38,15 @@ const CountdownTimer = ({ initialSeconds, isRunning, reset, onTimeUpdate }) => {
     }, [time, onTimeUpdate]);
 
     const DecrementHrsHandler = () => {
+        if(time > 3600)
         setTime(time - 1*60*60);
      };
     const DecrementMinsHandler = () => { 
+        if(time > 60)
         setTime(time - 1*60);
     };
     const DecrementSecsHandler = () => {
+        if (time > 0)
         setTime(time - 1);
     }
 
