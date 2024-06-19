@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Increment from './Components/Increment';
 import useSound from 'use-sound';
-import beep from "C:/Users/Asus/Desktop/Arsenal/Projects/pomodoro-react/app/success.mp3";
+import beep from "./success.mp3";
 
 const Page = () => {
   const [isRunning, setIsRunning] = useState(false);
