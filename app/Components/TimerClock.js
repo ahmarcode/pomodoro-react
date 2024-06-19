@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Increment from './Increment';
+import Decrement from './Decrement';
 
 const CountdownTimer = ({ initialSeconds, isRunning, reset, onTimeUpdate }) => {
     const [time, setTime] = useState(initialSeconds);
+    const holdTimer = useRef(null);
 
     useEffect(() => {
         setTime(initialSeconds);
@@ -16,7 +19,6 @@ const CountdownTimer = ({ initialSeconds, isRunning, reset, onTimeUpdate }) => {
             }, 1000);
         }
 
-
         return () => clearInterval(timerId);
     }, [isRunning, time]);
 
@@ -27,8 +29,6 @@ const CountdownTimer = ({ initialSeconds, isRunning, reset, onTimeUpdate }) => {
         return `${hrs}:${mins}:${secs}`;
     };
 
-
-
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             onTimeUpdate(time); // Send the current time to the parent component with a 1-second delay
@@ -37,67 +37,131 @@ const CountdownTimer = ({ initialSeconds, isRunning, reset, onTimeUpdate }) => {
         return () => clearTimeout(timeoutId); // Clean up the timeout on unmount or time change
     }, [time, onTimeUpdate]);
 
-    const DecrementHrsHandler = () => {
-        if(time > 3600)
-        setTime(time - 1*60*60);
-     };
-    const DecrementMinsHandler = () => { 
-        if(time > 60)
-        setTime(time - 1*60);
+    const handleHoldStart = (action) => {
+        let interval = 150; // Initial interval duration
+
+        const accelerate = () => {
+            action();
+            interval = Math.max(interval * 0.9, 50); // Decrease interval duration but not below 50ms
+            holdTimer.current = setTimeout(accelerate, interval);
+        };
+
+        accelerate();
     };
+
+    const handleHoldEnd = () => {
+        clearTimeout(holdTimer.current);
+    };
+
+    const DecrementHrsHandler = () => {
+        if (time > 3600 && !isRunning)
+            setTime((prev) => prev - 3600);
+    };
+
+    const DecrementMinsHandler = () => {
+        if (time >= 60 && !isRunning)
+            setTime((prev) => prev - 60);
+    };
+
     const DecrementSecsHandler = () => {
-        if (time > 0)
-        setTime(time - 1);
-    }
+        if (time > 0 && !isRunning)
+            setTime((prev) => prev - 1);
+    };
 
     const IncrementHrsHandler = () => {
-        setTime(time+1*60*60)
-    };        
+        if (!isRunning)
+            setTime((prev) => prev + 3600);
+    };
+
     const IncrementMinsHandler = () => {
-        setTime(time+1*60)
-    };    
+        if (!isRunning)
+            setTime((prev) => prev + 60);
+    };
+
     const IncrementSecsHandler = () => {
-        setTime(time+1)
-    };    
+        if (!isRunning)
+            setTime((prev) => prev + 1);
+    };
+
     return (
         <>
-            <div className='flex space-x-5  justify-between'>
-                <div className='' onClick={IncrementHrsHandler}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
-                    </svg>
-                </div>
-                <div className='' onClick={IncrementMinsHandler}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
-                    </svg>
-                </div>
-                <div className='' onClick={IncrementSecsHandler}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
-                    </svg>
-                </div>
-            </div>
-            <div>
+            {!isRunning && (
+                <>
+                    {/* Increment */}
+                    <div className='flex space-x-5 justify-between'>
+                        <button
+                            className=''
+                            onMouseDown={() => handleHoldStart(IncrementHrsHandler)}
+                            onMouseUp={handleHoldEnd}
+                            onMouseLeave={handleHoldEnd}
+                            onTouchStart={() => handleHoldStart(IncrementHrsHandler)}
+                            onTouchEnd={handleHoldEnd}
+                        >
+                            <Increment />
+                        </button>
+                        <button
+                            className=''
+                            onMouseDown={() => handleHoldStart(IncrementMinsHandler)}
+                            onMouseUp={handleHoldEnd}
+                            onMouseLeave={handleHoldEnd}
+                            onTouchStart={() => handleHoldStart(IncrementMinsHandler)}
+                            onTouchEnd={handleHoldEnd}
+                        >
+                            <Increment />
+                        </button>
+                        <button
+                            className=''
+                            onMouseDown={() => handleHoldStart(IncrementSecsHandler)}
+                            onMouseUp={handleHoldEnd}
+                            onMouseLeave={handleHoldEnd}
+                            onTouchStart={() => handleHoldStart(IncrementSecsHandler)}
+                            onTouchEnd={handleHoldEnd}
+                        >
+                            <Increment />
+                        </button>
+                    </div>
+                </>
+            )}
+            <div className='cursor-default select-none'>
                 <h1>{formatTime(time)}</h1>
             </div>
-            <div className='flex space-x-5  justify-between'>
-                <button className='' onClick={DecrementHrsHandler}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-                    </svg>
-                </button>
-                <button className='' onClick={DecrementMinsHandler}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-                    </svg>
-                </button>
-                <button className='' onClick={DecrementSecsHandler}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-                    </svg>
-                </button>
-            </div>
+            {!isRunning && (
+                <>
+                    {/* Decrement */}
+                    <div className='flex space-x-5 justify-between'>
+                        <button
+                            className=''
+                            onMouseDown={() => handleHoldStart(DecrementHrsHandler)}
+                            onMouseUp={handleHoldEnd}
+                            onMouseLeave={handleHoldEnd}
+                            onTouchStart={() => handleHoldStart(DecrementHrsHandler)}
+                            onTouchEnd={handleHoldEnd}
+                        >
+                            <Decrement />
+                        </button>
+                        <button
+                            className=''
+                            onMouseDown={() => handleHoldStart(DecrementMinsHandler)}
+                            onMouseUp={handleHoldEnd}
+                            onMouseLeave={handleHoldEnd}
+                            onTouchStart={() => handleHoldStart(DecrementMinsHandler)}
+                            onTouchEnd={handleHoldEnd}
+                        >
+                            <Decrement />
+                        </button>
+                        <button
+                            className=''
+                            onMouseDown={() => handleHoldStart(DecrementSecsHandler)}
+                            onMouseUp={handleHoldEnd}
+                            onMouseLeave={handleHoldEnd}
+                            onTouchStart={() => handleHoldStart(DecrementSecsHandler)}
+                            onTouchEnd={handleHoldEnd}
+                        >
+                            <Decrement />
+                        </button>
+                    </div>
+                </>
+            )}
         </>
     );
 };

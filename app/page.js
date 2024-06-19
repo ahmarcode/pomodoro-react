@@ -4,11 +4,12 @@ import TimerClock from './Components/TimerClock';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Increment from './Components/Increment';
 
 const Page = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [reset, setReset] = useState(false);
-  const [initialSeconds, setInitialSeconds] = useState(1000); // You can change this to any initial value you want
+  const [initialSeconds, setInitialSeconds] = useState(1*60*60); // You can change this to any initial value you want
   const [currentTime, setCurrentTime] = useState(initialSeconds);
 
   const handleToggle = () => {
@@ -60,20 +61,19 @@ const Page = () => {
   return (<>
     <div className='bg-purple-400 min-h-svh flex flex-col justify-between items-center'>
       <ToastContainer theme='dark' stacked />
-      <h1 className='text-purple-700 text-4xl font-bold'>Pomodoro</h1>
+      <h1 className='text-purple-700 text-4xl font-bold absolute top-12'>Pomodoro</h1>
 
 
       {/* Timer */}
-      <div className='flex items-center justify-center'>
-
+      <div className='flex items-center justify-center pt-10'>
         <h3 className={timerColor}>
           <TimerClock initialSeconds={initialSeconds} isRunning={isRunning} reset={reset} onTimeUpdate={handleTimeUpdate} />
         </h3>
       </div>
 
 
-      {/* Time buttons */}
-      <div className='flex justify-center'>
+      {/* Pre-Defined Time buttons */}
+      <div className='flex justify-center absolute bottom-[25%] select-none'>
         <button onClick={shortTimeHandler} className="h-10 px-6 font-bold rounded-full bg-violet-600 text-white mr-2" type="button">
           25 Mins
         </button>
@@ -83,7 +83,7 @@ const Page = () => {
       </div>
 
       {/* Control buttons */}
-      <div className='flex flex-col items-center w-full '>
+      <div className='flex flex-col items-center w-full select-none'>
         <button
           onClick={handleToggle}
           className='py-2 px-10 mb-2 bg-purple-700 rounded-lg text-slate-100 w-11/12 md:w-1/3'
@@ -96,6 +96,8 @@ const Page = () => {
         >
           Reset Timer
         </button>
+
+        <button className='bg-purple-800 rounded text-slate-100 w-11/12 md:w-1/3 mb-2'>Stopwatch</button>
       </div>
     </div>
   </>
