@@ -5,12 +5,16 @@ import TimerClock from './Components/TimerClock';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Increment from './Components/Increment';
+import useSound from 'use-sound';
+import beep from "C:/Users/Asus/Desktop/Arsenal/Projects/pomodoro-react/app/success.mp3";
 
 const Page = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [reset, setReset] = useState(false);
   const [initialSeconds, setInitialSeconds] = useState(1*60*60); // You can change this to any initial value you want
   const [currentTime, setCurrentTime] = useState(initialSeconds);
+
+  const [play] = useSound(beep);
 
   const handleToggle = () => {
     setIsRunning((prevIsRunning) => !prevIsRunning);
@@ -51,10 +55,11 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (currentTime == 0 && isRunning) {
+    if (currentTime === 0 && isRunning) {
       toast.success("🚀 Session Completed!");
+      play(); // Call the play function to play the sound
     }
-  })
+  }, [currentTime, isRunning, play]);
 
   const timerColor = currentTime ? "bg-purple-500 rounded-lg font-semibold text-5xl text-white text-center py-2 px-10" : "bg-red-500 rounded-lg font-semibold text-5xl text-white text-center py-2 px-10";
 
@@ -88,7 +93,7 @@ const Page = () => {
           onClick={handleToggle}
           className='py-2 px-10 mb-2 bg-purple-700 rounded-lg text-slate-100 w-11/12 md:w-1/3'
         >
-          {isRunning ? 'Stop Timer' : 'Start Timer'}
+          {isRunning ? ' Stop Timer' : 'Start Timer'}
         </button>
         <button
           onClick={resetHandler}
