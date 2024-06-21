@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 
-const Stopwatch = ({ isRunning, reset }) => {
+const Stopwatch = ({ isRunning, reset, setReset }) => {
     const [time, setTime] = useState(0);
 
     useEffect(() => {

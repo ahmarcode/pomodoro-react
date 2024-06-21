@@ -23,30 +23,30 @@ const Page = () => {
   };
 
   const resetHandler = () => {
-    setIsRunning(false); // Stop the timer
+    setIsRunning(false); // Stop the timer or stopwatch
     setReset((prevReset) => !prevReset); // Toggle the reset state to trigger the effect
-    toast.info("Timer Reset Successful");
+    toast.info(`${showStopwatch ? 'Stopwatch' : 'Timer'} Reset Successful`);
   };
 
   const shortTimeHandler = () => {
-    if (isRunning && currentTime !== 0) {
+    if (isRunning && !showStopwatch) {
       toast.warning("Timer is Already Running!!");
       toast.info("Reset for Next Session.");
     } else {
-      setIsRunning(true);
       setInitialSeconds(1500);
-      toast.success("25 Mins Timer Started.");
+      setCurrentTime(1500);
+      toast.success("25 Mins Timer Set.");
     }
   };
 
   const longTimeHandler = () => {
-    if (isRunning && currentTime !== 0) {
+    if (isRunning && !showStopwatch) {
       toast.warning("Timer is Already Running!!");
       toast.info("Reset for Next Session.");
     } else {
-      setIsRunning(true);
       setInitialSeconds(3300);
-      toast.success("55 Mins Timer Started.");
+      setCurrentTime(3300);
+      toast.success("55 Mins Timer Set.");
     }
   };
 
@@ -67,8 +67,10 @@ const Page = () => {
 
   const handleSwitch = () => {
     setAnimate(true);
+    
     setTimeout(() => {
       setShowStopwatch((prev) => !prev);
+      setIsRunning(false); // Ensure that it does not start automatically
       setAnimate(false);
     }, 2000); // Adjust the duration to match the animation
   };
@@ -88,7 +90,7 @@ const Page = () => {
         <div className="flex items-center justify-center pt-10">
           <h3 className={timerColor}>
             {showStopwatch ? (
-              <Stopwatch initialSeconds={initialSeconds} isRunning={isRunning} reset={reset} />
+              <Stopwatch isRunning={isRunning} reset={reset}/>
             ) : (
               <TimerClock initialSeconds={initialSeconds} isRunning={isRunning} reset={reset} onTimeUpdate={handleTimeUpdate} />
             )}
