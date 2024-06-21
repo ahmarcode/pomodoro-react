@@ -74,7 +74,7 @@ const Page = () => {
   };
 
   const timerColor = currentTime
-    ? "bg-purple-500 rounded-lg font-semibold text-5xl text-white text-center py-2 px-3"
+    ? "bg-purple-500 rounded-lg font-semibold text-5xl text-white text-center py-2 px-10"
     : "bg-red-500 rounded-lg font-semibold text-5xl text-white text-center py-2 px-10";
 
   return (
@@ -85,7 +85,7 @@ const Page = () => {
         <h1 className="text-purple-700 text-4xl font-bold absolute top-12">Pomodoro</h1>
 
         {/* Timer or Stopwatch */}
-        <div className="flex items-center justify-center" >
+        <div className="flex items-center justify-center pt-10">
           <h3 className={timerColor}>
             {showStopwatch ? (
               <Stopwatch initialSeconds={initialSeconds} isRunning={isRunning} reset={reset} />
